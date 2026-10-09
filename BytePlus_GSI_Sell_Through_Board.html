@@ -1,0 +1,560 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BytePlus GSI Sell-Through Board</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one operating column, summary first (number, coverage, partners), then pipeline detail, relationships, plan and evidence */
+:root{
+  --bd-navy:#325ab4; --bd-blue:#3c8cff; --bd-teal:#00c8d2; --bd-mint:#78e6dc;
+  --bg:#f4f7fc; --surface:#ffffff; --sunk:#edf2fa; --line:#d8e0ee;
+  --fg:#0d1a3a; --fg2:#38476b; --muted:#66748f;
+  --accent:#325ab4; --accent2:#3c8cff; --accent-soft:#e1eaff; --accent-ink:#2a4c9c; --teal-ink:#007f86; --teal-soft:#dcf6f5;
+  --good:#1b7f4b; --good-bg:#dff3e8; --warn:#9a6200; --warn-bg:#fbefd6; --crit:#b42318; --crit-bg:#fde4e1;
+  --idle:#5d6680; --idle-bg:#e8ebf2; --hero:#0d1a3a; --hero-fg:#ffffff; --hero-fg2:#c3d0ec;
+  --display:"Sora","Segoe UI",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0a1226; --surface:#121c36; --sunk:#18233f; --line:#26335a;
+  --fg:#e9eefa; --fg2:#bcc7e2; --muted:#8e9bba;
+  --accent:#6f93ec; --accent2:#5ea2ff; --accent-soft:#1f2f5e; --accent-ink:#a9c0ff; --teal-ink:#5fe0e6; --teal-soft:#123a40;
+  --good:#5fd39a; --good-bg:#14352a; --warn:#f0b54a; --warn-bg:#3a2e14; --crit:#ff8a80; --crit-bg:#3d1c1a;
+  --idle:#a3acc4; --idle-bg:#232c43; --hero:#121c36; --hero-fg:#ffffff; --hero-fg2:#bcc7e2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0a1226; --surface:#121c36; --sunk:#18233f; --line:#26335a;
+  --fg:#e9eefa; --fg2:#bcc7e2; --muted:#8e9bba;
+  --accent:#6f93ec; --accent2:#5ea2ff; --accent-soft:#1f2f5e; --accent-ink:#a9c0ff; --teal-ink:#5fe0e6; --teal-soft:#123a40;
+  --good:#5fd39a; --good-bg:#14352a; --warn:#f0b54a; --warn-bg:#3a2e14; --crit:#ff8a80; --crit-bg:#3d1c1a;
+  --idle:#a3acc4; --idle-bg:#232c43; --hero:#121c36; --hero-fg:#ffffff; --hero-fg2:#bcc7e2; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 64px;display:grid;gap:28px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(1.6rem,3.6vw,2.3rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.2rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0}
+a{color:var(--accent-ink)}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--fg2);max-width:70ch}
+header{display:grid;gap:12px;background:var(--hero);color:var(--hero-fg);border-radius:14px;padding:26px 24px 22px;position:relative;overflow:hidden}
+header::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:linear-gradient(90deg,var(--bd-navy) 0 25%,var(--bd-blue) 25% 50%,var(--bd-teal) 50% 75%,var(--bd-mint) 75% 100%)}
+header .eyebrow{color:var(--bd-mint)}
+header .lede{color:var(--hero-fg2)}
+header .chip{background:rgba(255,255,255,.08);color:var(--hero-fg);border-color:rgba(255,255,255,.18)}
+header .chip.ex{background:var(--bd-mint);color:#0d1a3a}
+.brandbar{display:flex;gap:4px;align-items:flex-end;height:22px}
+.brandbar i{display:block;width:6px;border-radius:2px}
+.meta{display:flex;flex-wrap:wrap;gap:8px}
+.wrap>*{min-width:0}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;padding:3px 10px;border-radius:12px;background:var(--sunk);color:var(--fg2);border:1px solid var(--line)}
+.grid2{grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))}
+.chip.ex{font-weight:600}
+section{display:grid;gap:14px}
+.sec-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px}
+.sec-head p{color:var(--muted);font-size:.85rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;min-width:0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+@media (max-width:420px){.tiles{grid-template-columns:1fr 1fr;gap:10px}.tile{padding:12px}.tile .v{font-size:1.35rem}}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:4px;align-content:start}
+.tile .v{font-family:var(--display);font-size:1.7rem;font-weight:600;font-variant-numeric:tabular-nums}
+.tile .v small.cur{font-size:.5em;font-weight:500;color:var(--muted);margin-right:4px;letter-spacing:.04em}
+.tile .l{font-size:.82rem;color:var(--fg2)}
+.tile .s{font-size:.72rem;color:var(--muted)}
+.tile.fact{border-top:3px solid var(--accent2)}
+.tile.exm{border-top:3px solid var(--bd-teal)}
+.scroll{overflow-x:auto;min-width:0}
+table{border-collapse:collapse;width:100%;font-size:.85rem}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono)}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.p-good{background:var(--good-bg);color:var(--good)}
+.p-warn{background:var(--warn-bg);color:var(--warn)}
+.p-crit{background:var(--crit-bg);color:var(--crit)}
+.p-idle{background:var(--idle-bg);color:var(--idle)}
+.p-acc{background:var(--accent-soft);color:var(--accent-ink)}
+.wave{font-family:var(--mono);font-size:.72rem;font-weight:500;padding:2px 8px;border-radius:4px;border:1px solid var(--line);white-space:nowrap}
+.w1{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.w2{background:var(--accent-soft);color:var(--accent-ink);border-color:transparent}
+.w3{background:var(--teal-soft);color:var(--teal-ink);border-color:transparent}
+.p-ex{background:var(--teal-soft);color:var(--teal-ink)}
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.filters label{font-size:.78rem;color:var(--muted);display:flex;gap:6px;align-items:center}
+select{font:inherit;font-size:.85rem;padding:5px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+.chart{position:relative}
+.chart svg{display:block;width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.78rem;color:var(--fg2);margin-top:8px}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-2px;margin-right:6px}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-size:.78rem;padding:6px 9px;border-radius:6px;white-space:nowrap;transform:translate(-50%,-110%);opacity:0;transition:opacity .12s}
+@media (prefers-reduced-motion:reduce){.tip{transition:none}}
+.note{font-size:.78rem;color:var(--muted)}
+.rel{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.rel .panel{display:grid;gap:10px;align-content:start}
+.rel ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.rel li{display:flex;justify-content:space-between;gap:10px;font-size:.85rem;align-items:center}
+.phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.phase{display:grid;gap:8px;align-content:start}
+.phase ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:.87rem;color:var(--fg2)}
+.phase .exit{font-size:.8rem;border-top:1px dashed var(--line);padding-top:8px;color:var(--fg)}
+.plays{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.play{display:grid;gap:6px;align-content:start}
+.play p{font-size:.86rem;color:var(--fg2)}
+.conf-Confirmed{background:var(--good-bg);color:var(--good)}
+.conf-Reported{background:var(--accent-soft);color:var(--accent-ink)}
+.conf-Unverified{background:var(--warn-bg);color:var(--warn);border:1px dashed var(--warn)}
+.gaps{margin:0;padding-left:18px;display:grid;gap:6px;font-size:.87rem;color:var(--fg2)}
+.findings{margin:0;padding-left:20px;display:grid;gap:8px;font-size:.9rem}
+.tcards td::before{content:none}
+@media (max-width:680px){
+ .tcards thead{display:none}
+ .tcards,.tcards tbody,.tcards tr,.tcards td{display:block;width:100%}
+ .tcards tr{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:10px;background:var(--surface);display:grid!important;grid-template-columns:1fr 1fr;gap:4px 14px}
+ .tcards td.lead,.tcards td.wide,.tcards td[colspan]{grid-column:1/-1}
+ .tcards td{border:0;padding:4px 0;min-width:0!important;text-align:left!important;white-space:normal!important}
+ .tcards td::before{content:attr(data-l);display:block;font-family:var(--mono);font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+ .tcards td.lead::before{content:none}
+ .tcards td.lead{font-family:var(--display);font-weight:600;font-size:.98rem}
+ .panel.scroll{overflow:visible;padding:0;background:transparent;border:0}
+ header{padding:22px 16px 18px}
+}
+.meter{display:grid;gap:12px}
+.mrow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,2fr) auto;gap:12px;align-items:center;font-size:.86rem}
+.mtrack{height:10px;border-radius:999px;background:var(--sunk);overflow:hidden;border:1px solid var(--line)}
+.mfill{height:100%;border-radius:999px;background:var(--bd-teal)}
+.mval{font-family:var(--mono);font-size:.8rem;color:var(--fg2);white-space:nowrap;font-variant-numeric:tabular-nums}
+@media (max-width:520px){.mrow{grid-template-columns:1fr auto}.mtrack{grid-column:1/-1;order:3}}
+.seq{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.78rem;color:var(--fg2)}
+.seq span{padding:3px 9px;border-radius:6px;background:var(--sunk);border:1px solid var(--line)}
+.seq b{color:var(--muted);font-weight:400}
+.rules{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.rules li{display:grid;gap:2px;font-size:.87rem;color:var(--fg2);padding-left:12px;border-left:3px solid var(--accent2)}
+.rules li strong{color:var(--fg)}
+.pair{font-size:.76rem;color:var(--muted)}
+.pair b{color:var(--teal-ink);font-weight:600}
+.rel li{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:.85rem;align-items:center}
+.rel li .pair{grid-column:1/-1}
+.mp{font-family:var(--mono);font-size:.78rem;white-space:nowrap}
+footer{font-size:.78rem;color:var(--muted);border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:520px){.wrap{padding-inline:16px}.panel{padding:14px}th,td{padding:8px 7px}}
+</style>
+</head><body>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">BytePlus · GSI sell-through channel · Singapore</span>
+  <h1>BytePlus GSI Sell-Through Board</h1>
+  <p class="lede">This board sets out how I would build and run the GSI channel for BytePlus. It shows which integrators to open first, the leading indicators that prove the channel is forming before revenue lands, how GSI deals are qualified and credited, how each partner relationship is paired with a BytePlus leader, and what the first 90 days deliver. The partner research comes from public sources, and the revenue tracker runs on an illustrative scenario with anonymised partners and clients.</p>
+  <div class="meta">
+    <span class="chip">GSIs tracked: Accenture, Cognizant, Wipro, Infosys, TCS, Capgemini, HCLTech</span>
+    <span class="chip">Researched on 9 Oct 2026</span>
+    <span class="chip ex">Tracker figures are an illustrative scenario</span>
+  </div>
+</header>
+
+<section aria-labelledby="s-ctx">
+  <div class="sec-head"><h2 id="s-ctx">Starting position</h2><p>Counted from the public findings table below</p></div>
+  <div class="tiles" id="factTiles"></div>
+</section>
+
+<section aria-labelledby="s-build">
+  <div class="sec-head"><h2 id="s-build">Build the channel first</h2><p><span class="pill p-ex">Illustrative scenario</span> Leading indicators at month 9 against month 12 goals</p></div>
+  <div class="grid2">
+    <div class="panel meter" id="leadMeter"></div>
+    <div class="panel" style="display:grid;gap:12px;align-content:start">
+      <h3>Why revenue comes last in a 0-to-1 channel</h3>
+      <p class="note" style="font-size:.86rem;color:var(--fg2)">Tier-1 GSIs need vendor registration, an alliance agreement and a joint plan before they register deals as a partner. That onboarding can take two to three quarters, so the year one target is back-loaded. The first deals close on BytePlus direct paper, with the GSI as influence or delivery partner, while the alliance agreements complete.</p>
+      <div class="seq" aria-label="Order of channel milestones"><span>Alliance agreement</span><b>›</b><span>Sandbox and certification</span><b>›</b><span>Joint PoC</span><b>›</b><span>Design-in</span><b>›</b><span>Registered deal</span><b>›</b><span>Revenue</span></div>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-num">
+  <div class="sec-head"><h2 id="s-num">Own the number</h2><p><span class="pill p-ex">Illustrative scenario</span> Month 9 of year one, back-loaded GSI revenue in USD</p></div>
+  <div class="tiles" id="numTiles"></div>
+  <div class="grid2">
+    <div class="panel">
+      <h3>Quarterly revenue against target</h3>
+      <div class="chart" id="qChart"></div>
+      <div class="legend">
+        <span><span class="sw" style="background:var(--accent)"></span>Closed</span>
+        <span><span class="sw" style="background:var(--teal-soft);border:1px solid var(--bd-teal)"></span>Commit forecast</span>
+        <span><span class="sw" style="background:var(--fg);height:3px;border-radius:0;vertical-align:3px"></span>Quarter target</span>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Open pipeline by stage</h3>
+      <div class="chart" id="stageChart"></div>
+      <p class="note">Design-in means BytePlus sits in the partner's reference architecture, proposal or RFP response. Technical win is owned with the BytePlus Solution Architect.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-prio">
+  <div class="sec-head"><h2 id="s-prio">Which GSIs to open first</h2><p>Facts link to sources, and the wave is my assessment to validate in the first 30 days</p></div>
+  <div class="panel scroll">
+    <table class="tcards">
+      <thead><tr><th>GSI</th><th>Wave</th><th>Singapore and SEA AI footprint</th><th>Current model alliances</th><th>Why BytePlus fits</th></tr></thead>
+      <tbody id="prioBody"></tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="s-qual">
+  <div class="sec-head"><h2 id="s-qual">Deal governance</h2><p>Proposed rules, to agree with BytePlus sales leadership in the first 30 days</p></div>
+  <div class="panel scroll">
+    <table class="tcards">
+      <thead><tr><th>Stage</th><th>What the GSI does</th><th>MEDDPICC gate to enter</th><th>Evidence in the CRM</th></tr></thead>
+      <tbody>
+        <tr><td class="lead" data-l="Stage">1. Identified</td><td class="wide" data-l="What the GSI does">Names the client, the use case and its account lead</td><td class="wide" data-l="MEDDPICC gate">Identify pain</td><td class="wide" data-l="Evidence">Pain stated by the client or the GSI account lead</td></tr>
+        <tr><td class="lead" data-l="Stage">2. Qualified with GSI</td><td class="wide" data-l="What the GSI does">Agrees to pursue jointly and registers the deal</td><td class="wide" data-l="MEDDPICC gate">Metrics, Economic buyer, Champion</td><td class="wide" data-l="Evidence">Business metric agreed, economic buyer named, champion at the client and at the GSI</td></tr>
+        <tr><td class="lead" data-l="Stage">3. Design-in</td><td class="wide" data-l="What the GSI does">Writes BytePlus into its architecture, proposal or RFP response</td><td class="wide" data-l="MEDDPICC gate">Decision criteria, Decision process</td><td class="wide" data-l="Evidence">Criteria and evaluation steps documented, BytePlus named in the GSI document</td></tr>
+        <tr><td class="lead" data-l="Stage">4. Technical win</td><td class="wide" data-l="What the GSI does">Runs the PoC with the BytePlus Solution Architect</td><td class="wide" data-l="MEDDPICC gate">Paper process, Competition</td><td class="wide" data-l="Evidence">PoC sign-off, procurement and legal steps mapped, competing models listed</td></tr>
+        <tr><td class="lead" data-l="Stage">5. Commit</td><td class="wide" data-l="What the GSI does">Supports the order through client procurement</td><td class="wide" data-l="MEDDPICC gate">All eight elements confirmed</td><td class="wide" data-l="Evidence">Close date confirmed by the economic buyer</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel" style="display:grid;gap:12px">
+    <h3>Deal registration and credit, sourced and influenced</h3>
+    <ul class="rules">
+      <li><strong>Sourced</strong>The GSI brings an opportunity that is not open in the BytePlus CRM and registers it before the first BytePlus client meeting. It earns full GSI channel credit, and the registration is protected for 90 days, with one extension when progress is documented.</li>
+      <li><strong>Influenced</strong>BytePlus already works the account, and the GSI shapes the architecture, writes BytePlus into its proposal or delivers the project. The GSI is recorded as influence partner on the opportunity, and the deal counts toward the GSI target at a share agreed with sales leadership.</li>
+      <li><strong>Direct sellers</strong>The BytePlus account executive keeps full quota credit on GSI deals in their accounts, so direct sellers gain when they bring a GSI in.</li>
+      <li><strong>Conflicts</strong>The first registration with evidence wins, and the regional sales leader decides any dispute within five business days.</li>
+    </ul>
+    <p class="note">BytePlus already runs deal registration for direct resellers in its Partner Network, so the GSI rules extend an existing process. <a href="https://www.byteplus.com/en/partners" target="_blank" rel="noopener">BytePlus Partner Network</a></p>
+  </div>
+</section>
+
+<section aria-labelledby="s-pipe">
+  <div class="sec-head"><h2 id="s-pipe">Co-sell pipeline</h2><p><span class="pill p-ex">Illustrative scenario</span> Partners and end clients are anonymised</p></div>
+  <div class="panel" style="display:grid;gap:12px">
+    <div class="filters">
+      <label for="fGsi">Partner <select id="fGsi"></select></label>
+      <label for="fCat">Forecast <select id="fCat"><option value="">All</option><option>Commit</option><option>Best case</option><option>Pipeline</option><option>Won</option></select></label>
+      <label for="fSrc">Motion <select id="fSrc"><option value="">All</option><option>Sourced</option><option>Influenced</option></select></label>
+      <span class="note" id="pipeSum"></span>
+    </div>
+    <div class="scroll">
+      <table class="tcards">
+        <thead><tr><th>Partner and end client</th><th>Use case</th><th>BytePlus product</th><th>Stage</th><th>MEDDPICC</th><th>Motion</th><th>Forecast</th><th class="num">USD k</th><th>Close</th><th>Next step</th></tr></thead>
+        <tbody id="pipeBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-rel">
+  <div class="sec-head"><h2 id="s-rel">Relationship build, wave 1</h2><p><span class="pill p-ex">Illustrative scenario</span> Each GSI seat is paired with a BytePlus counterpart</p></div>
+  <div class="rel" id="relGrid"></div>
+  <div class="legend">
+    <span><span class="pill p-idle">Not started</span></span>
+    <span><span class="pill p-warn">Opened</span> first meeting held</span>
+    <span><span class="pill p-acc">Engaged</span> working on a joint plan or deal</span>
+    <span><span class="pill p-good">Sponsor</span> signed joint plan or named exec sponsor</span>
+  </div>
+</section>
+
+<section aria-labelledby="s-plays">
+  <div class="sec-head"><h2 id="s-plays">Plays to take into GSI practices</h2><p>Proof points are vendor or customer statements from public sources</p></div>
+  <div class="plays" id="plays"></div>
+</section>
+
+<section aria-labelledby="s-90">
+  <div class="sec-head"><h2 id="s-90">First 90 days</h2><p>Each phase ends on an exit test</p></div>
+  <div class="phases">
+    <div class="panel phase">
+      <span class="eyebrow">Days 1 to 30</span><h3>Map and select</h3>
+      <ul>
+        <li>Score the seven GSIs on SEA AI practice size, model alliances, industry overlap and delivery capacity in Singapore.</li>
+        <li>Pull every open BytePlus direct deal where a GSI already delivers, and list the partner in each one.</li>
+        <li>Agree the GSI target, the credit rules for sourced and influenced revenue, and the deal registration path with sales leadership.</li>
+        <li>Meet the Solution Architect team and pick two reference use cases per wave 1 partner.</li>
+      </ul>
+      <p class="exit"><strong>Exit test:</strong> three wave 1 GSIs selected with a named practice lead to meet in each.</p>
+    </div>
+    <div class="panel phase">
+      <span class="eyebrow">Days 31 to 60</span><h3>Open and enable</h3>
+      <ul>
+        <li>Run a ModelArk and Seedance working session with each wave 1 AI practice, with the Solution Architect on site.</li>
+        <li>Agree a joint account list of 10 to 15 SEA clients per partner, built from overlap with BytePlus direct coverage.</li>
+        <li>Start vendor registration and the alliance agreement with procurement and legal at each wave 1 partner.</li>
+        <li>Give partner architects sandbox access and a short certification path.</li>
+      </ul>
+      <p class="exit"><strong>Exit test:</strong> alliance agreements in legal review at three partners, 20 partner architects with sandbox access, and two joint PoCs scoped.</p>
+    </div>
+    <div class="panel phase">
+      <span class="eyebrow">Days 61 to 90</span><h3>First joint pipeline</h3>
+      <ul>
+        <li>Launch two joint PoCs with the Solution Architect team and agree success criteria with each client.</li>
+        <li>Register the first deals under the agreed sourced and influenced rules.</li>
+        <li>Pair a BytePlus regional leader with the executive sponsor at the lead partner and sign a one-page joint plan.</li>
+        <li>Start the monthly GSI forecast inside the BytePlus sales cadence.</li>
+      </ul>
+      <p class="exit"><strong>Exit test:</strong> one alliance agreement signed, two PoCs live, five registered deals, and an executive pairing in place at the lead partner.</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="s-rhythm">
+  <div class="sec-head"><h2 id="s-rhythm">Operating rhythm</h2></div>
+  <div class="panel scroll">
+    <table class="tcards">
+      <thead><tr><th>Cadence</th><th>Forum</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td class="lead" data-l="Cadence">Weekly</td><td class="wide" data-l="Forum">Forecast call with BytePlus sales leadership</td><td class="wide" data-l="Output">Commit, best case and pipeline by GSI, with deals that moved</td></tr>
+        <tr><td class="lead" data-l="Cadence">Weekly</td><td class="wide" data-l="Forum">Deal review with each wave 1 alliance manager</td><td class="wide" data-l="Output">Next steps and owners on every joint opportunity</td></tr>
+        <tr><td class="lead" data-l="Cadence">Monthly</td><td class="wide" data-l="Forum">Deal registration and credit review with sales operations</td><td class="wide" data-l="Output">Approved registrations, credit decisions, disputes closed</td></tr>
+        <tr><td class="lead" data-l="Cadence">Monthly</td><td class="wide" data-l="Forum">Practice session with partner AI and data leads</td><td class="wide" data-l="Output">New design-ins, enablement progress, sandbox usage</td></tr>
+        <tr><td class="lead" data-l="Cadence">Quarterly</td><td class="wide" data-l="Forum">Business review with the executive sponsor</td><td class="wide" data-l="Output">Revenue against the joint plan, next quarter targets, investment asks</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-labelledby="s-find">
+  <div class="sec-head"><h2 id="s-find">Public findings</h2><p id="findCount"></p></div>
+  <div class="panel" style="display:grid;gap:12px">
+    <div class="filters">
+      <label for="ffOrg">Organisation <select id="ffOrg"></select></label>
+      <label for="ffConf">Confidence <select id="ffConf"><option value="">All</option><option>Confirmed</option><option>Reported</option><option>Unverified</option></select></label>
+    </div>
+    <div class="scroll">
+      <table class="tcards">
+        <thead><tr><th>Organisation and date</th><th>Finding</th><th>Confidence</th><th>Source</th></tr></thead>
+        <tbody id="findBody"></tbody>
+      </table>
+    </div>
+    <p class="note">Confirmed means a primary source such as a company newsroom or official page. Reported means reputable press only.</p>
+  </div>
+</section>
+
+<section aria-labelledby="s-gaps">
+  <div class="sec-head"><h2 id="s-gaps">Gaps and unknowns</h2></div>
+  <div class="panel">
+    <ul class="gaps">
+      <li>BytePlus does not publish a GSI tier or GSI programme, and its partner page lists distributors, direct resellers and agencies only.</li>
+      <li>This scan found no public BytePlus alliance with any of the seven GSIs.</li>
+      <li>BytePlus revenue and customer counts for Southeast Asia are not publicly available.</li>
+      <li>A frontier-model alliance for HCLTech was not found in this scan, so its row shows the Singapore lab only.</li>
+      <li>The TCS Gemini Experience Centre article carries no publication date.</li>
+      <li>The Infosys Compaz extension dates from October 2023, which sits outside the 12-month window, and it stays on the board as structural context.</li>
+    </ul>
+  </div>
+</section>
+
+<section aria-labelledby="s-key">
+  <div class="sec-head"><h2 id="s-key">Key findings</h2></div>
+  <div class="panel">
+    <ol class="findings">
+      <li>The BytePlus partner network covers distributors, direct resellers and agencies, which leaves the GSI route open as a new channel. <a href="https://www.byteplus.com/en/partners" target="_blank" rel="noopener">BytePlus</a></li>
+      <li>Accenture, Infosys and Cognizant all signed Anthropic alliances between December 2025 and July 2026, and Capgemini became a founding member of the OpenAI Frontier Alliance in February 2026, so GSI AI practices already run multi-model portfolios. <a href="https://anthropic.com/news/anthropic-accenture-partnership" target="_blank" rel="noopener">Anthropic</a>, <a href="https://www.capgemini.com/news/press-releases/capgemini-joins-forces-with-openai-to-accelerate-new-era-of-ai-powered-enterprise-transformation-with-frontier-alliance/" target="_blank" rel="noopener">Capgemini</a></li>
+      <li>Accenture is an Alibaba Cloud Partner of the Year with an Asia-Pacific focus, which shows an existing practice for a Chinese AI and cloud stack. <a href="https://www.accenture.com/fr-fr/services/ecosystem-partners/alibaba" target="_blank" rel="noopener">Accenture</a></li>
+      <li>Accenture named a head of advanced AI for Southeast Asia in June 2026, and Cognizant launched a Thailand AI partnership with Gulf Edge in July 2026, which gives two fresh SEA AI decision makers to meet. <a href="https://news.bgov.com/artificial-intelligence/stanchart-former-ai-chief-joins-accenture-as-southeast-asia-head" target="_blank" rel="noopener">Bloomberg</a>, <a href="https://macaubusiness.com/cognizant-and-gulf-edge-announce-strategic-partnership-to-accelerate-enterprise-ai-adoption-in-southeast-asia/" target="_blank" rel="noopener">Macau Business</a></li>
+      <li>Wipro won an engagement of more than USD 1 billion with Olam in Singapore in April 2026 and set up 1,500 forward deployed engineers for Google Cloud in August 2026. <a href="https://www.wipro.com/newsroom/press-releases/2026/wipro-wins-one-of-its-largest-strategic-transformation-engagements-from-food-and-agri-business-leader-olam-group/" target="_blank" rel="noopener">Wipro</a>, <a href="https://www.crnasia.com/india/news/2026/wipro-expands-google-cloud-alliance-with-1-500-member-ai-engineering-push" target="_blank" rel="noopener">CRN Asia</a></li>
+      <li>BytePlus already sells through local integrators in SEA, for example 3DS Interactive at CP LAND in Thailand, which gives a delivery pattern that GSIs can scale. <a href="https://www.nationthailand.com/pr-news/pr-news/40057741" target="_blank" rel="noopener">The Nation</a></li>
+      <li>Dreamina Seedance 2.5 reached ModelArk in August 2026 with 30-second clips and C2PA content credentials, which suits the content and marketing practices inside GSIs. <a href="https://www.byteplus.com/en/blog/dreamina-seedance2-5" target="_blank" rel="noopener">BytePlus</a></li>
+    </ol>
+  </div>
+</section>
+
+<footer>Prepared by Vincent Cartron for the BytePlus AI Sales Manager (GSI) role. Public findings researched on 9 October 2026. Revenue, pipeline and relationship figures form an illustrative scenario with anonymised partners and clients. All other facts link to public sources.</footer>
+</div>
+
+<script>
+(function(){
+const FIND=[
+ {d:"2026-08-06",o:"BytePlus",f:"Dreamina Seedance 2.5 available on ModelArk, with clips up to 30 seconds, up to 50 references per clip and C2PA content credentials.",c:"Confirmed",s:"BytePlus blog",u:"https://www.byteplus.com/en/blog/dreamina-seedance2-5",tag:"product"},
+ {d:"2026-08-18",o:"BytePlus",f:"BytePlus AI Day Thailand 2026, organised by BytePlus Singapore for Thai business and technology leaders.",c:"Reported",s:"TechTalkThai",u:"https://www.techtalkthai.com/tag/aidaythailand2026/",tag:"event"},
+ {d:"2026-04-16",o:"BytePlus",f:"Indonesia AI Day in Jakarta. Transjakarta reports a 93.82% cut in inquiry handling time with a BytePlus chatbot, and Volantis reports 40 to 50% cost savings on Seed 1.8 Pro via ModelArk.",c:"Reported",s:"VOI",u:"https://voi.id/en/economy/571147",tag:"customer"},
+ {d:"2025-11-04",o:"BytePlus",f:"CP LAND partnership in Thailand with BytePlus as technology partner and 3DS Interactive as system integrator.",c:"Reported",s:"The Nation Thailand",u:"https://www.nationthailand.com/pr-news/pr-news/40057741",tag:"si"},
+ {d:"2025-05-06",o:"BytePlus",f:"Synagistics partnership to drive enterprise AI adoption in Singapore, Indonesia, Malaysia, Thailand and Vietnam.",c:"Reported",s:"Reuters via Tiger Brokers",u:"https://www.itiger.com/news/2533359471",tag:"partner"},
+ {d:"2026-10-09",o:"BytePlus",f:"Partner Network lists three partner types (distributor, direct reseller with margin and deal registration, agency) with a 30%+ standard partner discount and no GSI tier.",c:"Confirmed",s:"BytePlus Partner Network",u:"https://www.byteplus.com/en/partners",tag:"programme"},
+ {d:"2025-12-09",o:"Accenture",f:"Accenture Anthropic Business Group launched, with about 30,000 professionals to be trained on Claude.",c:"Confirmed",s:"Anthropic newsroom",u:"https://anthropic.com/news/anthropic-accenture-partnership",tag:"model"},
+ {d:"",o:"Accenture",f:"Alibaba Cloud Partner of the Year and industry solutions leader for Alibaba Cloud, with an Asia-Pacific focus.",c:"Confirmed",s:"Accenture",u:"https://www.accenture.com/fr-fr/services/ecosystem-partners/alibaba",tag:"model"},
+ {d:"2026-06-30",o:"Accenture",f:"David Hardoon joins as managing director and head of advanced AI for Southeast Asia.",c:"Reported",s:"Bloomberg",u:"https://news.bgov.com/artificial-intelligence/stanchart-former-ai-chief-joins-accenture-as-southeast-asia-head",tag:"people"},
+ {d:"2026-02-18",o:"Infosys",f:"Collaboration with Anthropic to integrate Claude and Claude Code with the Infosys Topaz platform, starting in telecom.",c:"Reported",s:"Enterprise AM",u:"https://enterpriseam.com/mena-india/2026/02/18/anthropic-wagers-big-on-india-with-bengaluru-launch-infosys-tie-up/",tag:"model"},
+ {d:"2023-10-12",o:"Infosys",f:"Infosys and Temasek extend the Infosys Compaz digital services joint venture in Singapore for five years.",c:"Reported",s:"Outlook Business",u:"https://www.outlookbusiness.com/corporate/infosys-temasek-extend-digital-services-jv-for-5-years",tag:"footprint"},
+ {d:"2026-07-27",o:"Cognizant",f:"Becomes a Global Premier Partner in the Claude Partner Network, with more than 30,000 associates trained on Claude.",c:"Confirmed",s:"Cognizant newsroom",u:"https://news.cognizant.com/2026-07-27-Cognizant-and-Anthropic-expand-partnership-to-embed-Claude-in-Cognizants-industry-platforms,-helping-clients-close-the-gap-between-AI-promise-and-business-outcomes",tag:"model"},
+ {d:"2026-07-23",o:"Cognizant",f:"Strategic AI partnership with Gulf Edge in Thailand, aimed at a regional AI hub, with Thomas Mathew, VP and Head of ASEAN and Greater China, at the signing.",c:"Reported",s:"Macau Business",u:"https://macaubusiness.com/cognizant-and-gulf-edge-announce-strategic-partnership-to-accelerate-enterprise-ai-adoption-in-southeast-asia/",tag:"footprint"},
+ {d:"2026-02-23",o:"Capgemini",f:"Founding member of the OpenAI Frontier Alliance, with a dedicated OpenAI Enterprise Frontier delivery function.",c:"Confirmed",s:"Capgemini newsroom",u:"https://www.capgemini.com/news/press-releases/capgemini-joins-forces-with-openai-to-accelerate-new-era-of-ai-powered-enterprise-transformation-with-frontier-alliance/",tag:"model"},
+ {d:"2024-02-08",o:"Capgemini",f:"Alliance with Mistral AI to build its models into client generative AI systems.",c:"Confirmed",s:"Capgemini newsroom",u:"https://www.capgemini.com/nz-en/news/press-releases/capgemini-partners-with-mistral-ai-to-spearhead-the-adoption-of-new-frontier-generative-ai-models/",tag:"model"},
+ {d:"2025-07-14",o:"TCS",f:"AI-powered Research and Innovation Centre opened at Changi Business Park, one of four TCS hubs in Asia-Pacific.",c:"Reported",s:"FutureCIO",u:"https://futurecio.tech/tcs-launches-ai-powered-research-innovation-centre-in-singapore",tag:"footprint"},
+ {d:"",o:"TCS",f:"Google Cloud Gemini Experience Centre opened in Singapore inside the TCS Global Innovation Labs.",c:"Reported",s:"The Machine Maker",u:"https://themachinemaker.com/news/tcs-opens-google-cloud-gemini-experience-centre-in-singapore-to-accelerate-enterprise-ai-adoption/",tag:"model"},
+ {d:"2026-04-06",o:"Wipro",f:"Eight-year Olam engagement above USD 1 billion, including the acquisition of Mindsprint and its 3,200 staff.",c:"Confirmed",s:"Wipro newsroom",u:"https://www.wipro.com/newsroom/press-releases/2026/wipro-wins-one-of-its-largest-strategic-transformation-engagements-from-food-and-agri-business-leader-olam-group/",tag:"footprint"},
+ {d:"2026-08-28",o:"Wipro",f:"Google Cloud alliance expanded with 1,500 certified forward deployed engineers and Gemini Enterprise enablement for 10,000 AI specialists.",c:"Reported",s:"CRN Asia",u:"https://www.crnasia.com/india/news/2026/wipro-expands-google-cloud-alliance-with-1-500-member-ai-engineering-push",tag:"model"},
+ {d:"2024-11-04",o:"HCLTech",f:"AI/Cloud Native Lab in Singapore announced with the Economic Development Board, the fifth lab in its global network.",c:"Confirmed",s:"HCLTech newsroom",u:"https://www.hcltech.com/en-us/press-releases/hcltech-announces-new-aicloud-native-lab-singapore-partnership-singapore-economic",tag:"footprint"},
+ {d:"2026-05-12",o:"Other",f:"Mistral AI signs MOUs in Singapore with Singtel, NCS and ST Engineering, which shows local integrators taking model alliances.",c:"Reported",s:"Intelligent CIO APAC",u:"https://www.intelligentcio.com/apac/2026/05/12/mistral-ai-accelerates-singapore-expansion-with-strategic-partnership-and-industry-collaborations/",tag:"market"}
+];
+const GSIS=["Accenture","Cognizant","Wipro","Infosys","TCS","Capgemini","HCLTech"];
+const PRIO=[
+ {g:"Accenture",w:1,fp:"New head of advanced AI for SEA (Jun 2026)",ma:"Anthropic Business Group; Alibaba Cloud Partner of the Year",why:"Already runs a practice on a Chinese AI and cloud stack in APAC, and its content and marketing teams are a natural home for Seedance and Seedream."},
+ {g:"Cognizant",w:1,fp:"Gulf Edge AI partnership in Thailand (Jul 2026)",ma:"Anthropic Global Premier Partner",why:"Is building SEA AI capacity now, and a cost-efficient model option fits its regional expansion and client price pressure."},
+ {g:"Wipro",w:1,fp:"Olam engagement above USD 1bn, Singapore (Apr 2026)",ma:"Google Cloud, with 1,500 forward deployed engineers",why:"Has a large new Singapore-based client estate and an agentic AI delivery model, and I know its partner and practice teams from my time there."},
+ {g:"Infosys",w:2,fp:"Infosys Compaz JV with Temasek in Singapore",ma:"Anthropic with Topaz",why:"Compaz gives a Singapore delivery base with public and enterprise clients, where a second model option can sit inside Topaz."},
+ {g:"TCS",w:2,fp:"AI Research and Innovation Centre, Changi (Jul 2025)",ma:"Google Cloud Gemini Experience Centre, Singapore",why:"Runs a co-creation centre with startups and enterprises in Singapore where BytePlus demos can be placed."},
+ {g:"Capgemini",w:2,fp:"Not found in this scan",ma:"OpenAI Frontier Alliance; Mistral AI",why:"Already sells a multi-model position, so adding a multimodal model family is consistent with its stance."},
+ {g:"HCLTech",w:3,fp:"AI/Cloud Native Lab with EDB, Singapore",ma:"Not found in this scan",why:"Has a Singapore lab for AI prototypes, and the model alliance picture needs a first meeting to confirm."}
+];
+const STAGES=["Identified","Qualified with GSI","Design-in","Technical win","Commit"];
+const PIPE=[
+ {g:"Partner A",c:"Regional bank, Singapore",uc:"Contact centre agent, multilingual",p:"ModelArk, Seed LLM",st:"Technical win",m:"Sourced",fc:"Commit",v:120,q:"Q3",mp:6,n:"Client order on BytePlus direct terms"},
+ {g:"Partner C",c:"Agribusiness group, Singapore",uc:"Trader assistant, multilingual",p:"ModelArk, Seed LLM",st:"Technical win",m:"Sourced",fc:"Commit",v:90,q:"Q3",mp:6,n:"Security review with client"},
+ {g:"Partner A",c:"Consumer brand, Thailand",uc:"Campaign video at scale",p:"Seedance 2.5",st:"Design-in",m:"Sourced",fc:"Best case",v:150,q:"Q4",mp:5,n:"Creative PoC with partner content studio"},
+ {g:"Partner B",c:"Telco, Thailand",uc:"Customer service automation",p:"ModelArk, Seed LLM",st:"Design-in",m:"Sourced",fc:"Best case",v:200,q:"Q4",mp:5,n:"BytePlus named in RFP architecture"},
+ {g:"Partner B",c:"Bank, Singapore",uc:"Relationship manager copilot",p:"ModelArk, Seed LLM",st:"Design-in",m:"Influenced",fc:"Best case",v:250,q:"Q4",mp:4,n:"Decision process walkthrough with CIO office"},
+ {g:"Partner A",c:"Retailer, Malaysia",uc:"Product image generation",p:"Seedream",st:"Qualified with GSI",m:"Influenced",fc:"Pipeline",v:80,q:"Q4",mp:3,n:"Agree success metric for pilot"},
+ {g:"Partner C",c:"Airline, Malaysia",uc:"Service agent and content",p:"ModelArk, Seedance",st:"Qualified with GSI",m:"Influenced",fc:"Pipeline",v:140,q:"Q4",mp:3,n:"Solution Architect session"},
+ {g:"Partner C",c:"Manufacturer, Vietnam",uc:"Multilingual technical support agent",p:"ModelArk, Seed LLM",st:"Qualified with GSI",m:"Sourced",fc:"Pipeline",v:180,q:"Q4",mp:3,n:"Confirm economic buyer"},
+ {g:"Partner A",c:"Media group, Singapore",uc:"Short-form video localisation",p:"Seedance 2.5",st:"Qualified with GSI",m:"Sourced",fc:"Pipeline",v:220,q:"Q4",mp:3,n:"Champion intro to content director"},
+ {g:"Partner B",c:"Insurer, Singapore",uc:"Claims document triage",p:"ModelArk",st:"Identified",m:"Sourced",fc:"Pipeline",v:100,q:"Next Q1",mp:1,n:"Intro with practice lead"},
+ {g:"Partner D",c:"Public agency, Singapore",uc:"Citizen enquiry chatbot",p:"ModelArk",st:"Identified",m:"Influenced",fc:"Pipeline",v:150,q:"Next Q1",mp:1,n:"Check data residency needs"},
+ {g:"Partner E",c:"Bank, Indonesia",uc:"Collections voice and chat",p:"ModelArk, Seed LLM",st:"Qualified with GSI",m:"Sourced",fc:"Pipeline",v:120,q:"Next Q1",mp:2,n:"Demo at partner innovation centre"},
+ {g:"Partner F",c:"Consumer goods, Vietnam",uc:"Localised ad variants",p:"Seedream, Seedance",st:"Identified",m:"Sourced",fc:"Pipeline",v:60,q:"Next Q1",mp:1,n:"First call with alliance manager"},
+ {g:"Partner C",c:"Logistics firm, Singapore",uc:"Shipment exception agent",p:"ModelArk",st:"Commit",m:"Influenced",fc:"Won",v:30,q:"Q2",mp:8,n:"Closed on BytePlus direct paper, partner delivers"}
+];
+const Q=[{q:"Q1",t:0,closed:0,commit:0},{q:"Q2",t:50,closed:0,commit:0},{q:"Q3",t:200,closed:0,commit:0},{q:"Q4",t:500,closed:0,commit:0}];
+Q.forEach(d=>{d.closed=PIPE.filter(x=>x.q===d.q&&x.fc==="Won").reduce((a,x)=>a+x.v,0);});
+Q[2].commit=PIPE.filter(x=>x.q==="Q3"&&x.fc==="Commit").reduce((a,x)=>a+x.v,0);
+const LEAD=[
+ ["Alliance agreements signed",2,3],
+ ["Partner architects with sandbox access",46,60],
+ ["Certified partner architects",18,30],
+ ["Joint PoCs launched",5,8],
+ ["Design-ins in architecture, proposal or RFP",PIPE.filter(x=>["Design-in","Technical win","Commit"].includes(x.st)).length,10],
+ ["Registered deals (stage 2 or later)",PIPE.filter(x=>x.st!=="Identified").length,20],
+ ["Executive pairings in place",1,3]
+];
+const REL={
+ "Partner A":[["Executive sponsor","Opened","BytePlus regional GM or VP"],["AI practice lead, SEA","Engaged","Solution Architect lead"],["Alliance manager","Sponsor","GSI alliance lead (this role)"],["Content and marketing lead","Engaged","Seedance product specialist"]],
+ "Partner B":[["Executive sponsor","Not started","BytePlus regional GM or VP"],["AI practice lead, ASEAN","Opened","Solution Architect lead"],["Alliance manager","Engaged","GSI alliance lead (this role)"],["Delivery lead, Thailand","Opened","BytePlus country lead, Thailand"]],
+ "Partner C":[["Executive sponsor","Opened","BytePlus regional GM or VP"],["AI practice lead, APAC","Engaged","Solution Architect lead"],["Alliance manager","Engaged","GSI alliance lead (this role)"],["Client partner, Singapore","Sponsor","BytePlus account executive for the client"]]
+};
+const STCLS={"Not started":"p-idle","Opened":"p-warn","Engaged":"p-acc","Sponsor":"p-good"};
+const PLAYS=[
+ {t:"Multilingual customer service agents",p:"ModelArk, Seed LLM",proof:"Transjakarta reports a 93.82% cut in inquiry handling time with its BytePlus chatbot.",u:"https://voi.id/en/economy/571147",fit:"Contact centre and BPO practices"},
+ {t:"Lower cost per AI workload",p:"Seed 1.8 Pro via ModelArk",proof:"Volantis Technology reports 40 to 50% cost savings and above 95% accuracy in testing.",u:"https://voi.id/en/economy/571147",fit:"Practices facing price pressure on AI programmes"},
+ {t:"Video and image at campaign scale",p:"Seedance 2.5, Seedream",proof:"Seedance 2.5 generates clips up to 30 seconds with C2PA content credentials and over 10,000 virtual human assets.",u:"https://www.byteplus.com/en/blog/dreamina-seedance2-5",fit:"Marketing, content and commerce practices"},
+ {t:"Data platform plus AI for real estate and retail",p:"BytePlus with a CDP partner",proof:"CP LAND in Thailand runs a single data hub and AI marketing platform, with 3DS Interactive as integrator.",u:"https://www.nationthailand.com/pr-news/pr-news/40057741",fit:"Data and customer experience practices"}
+];
+const $=id=>document.getElementById(id);
+const fmtM=k=>"USD "+(k/1000).toFixed(2)+"m";
+const bigM=k=>`<small class="cur">USD</small>${(k/1000).toFixed(2)}m`;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+// Fact tiles
+const gsiWithModel=new Set(FIND.filter(x=>GSIS.includes(x.o)&&x.tag==="model").map(x=>x.o));
+const confirmed=FIND.filter(x=>x.c==="Confirmed").length;
+$("factTiles").innerHTML=[
+ [GSIS.length,"GSIs on the board","Accenture, Cognizant, Wipro, Infosys, TCS, Capgemini, HCLTech"],
+ [gsiWithModel.size+" of "+GSIS.length,"GSIs with a public model alliance","Anthropic, OpenAI, Mistral, Google or Alibaba Cloud"],
+ [0,"Public BytePlus and GSI alliances","None found in this scan"],
+ [3,"BytePlus partner types today","Distributor, direct reseller, agency"],
+ [FIND.length,"Public findings","Of which "+confirmed+" confirmed from primary sources"]
+].map(t=>`<div class="tile fact"><span class="v">${t[0]}</span><span class="l">${t[1]}</span><span class="s">${t[2]}</span></div>`).join("");
+
+// Number tiles
+const target=Q.reduce((a,x)=>a+x.t,0);
+const closed=Q.reduce((a,x)=>a+x.closed,0);
+const open=PIPE.filter(x=>x.fc!=="Won");
+const openV=open.reduce((a,x)=>a+x.v,0);
+const q3c=Q[2].commit;
+const q4p=open.filter(x=>x.q==="Q4").reduce((a,x)=>a+x.v,0);
+const q4cover=q4p/Q[3].t;
+const srcShare=PIPE.filter(x=>x.m==="Sourced").reduce((a,x)=>a+x.v,0)/PIPE.reduce((a,x)=>a+x.v,0);
+$("numTiles").innerHTML=[
+ [bigM(target),"Year one GSI target","Back-loaded, "+Math.round((Q[2].t+Q[3].t)/target*100)+"% in Q3 and Q4"],
+ [bigM(closed),"Closed to date","First deal on BytePlus direct paper"],
+ [bigM(q3c),"Q3 commit","Against Q3 target of USD "+Q[2].t+"k"],
+ [q4cover.toFixed(1)+"x","Q4 pipeline coverage","Goal is 3x, so wave 2 partners open next"],
+ [bigM(openV),"Open pipeline",open.length+" opportunities, all stages"],
+ [Math.round(srcShare*100)+"%","GSI-sourced share","Remainder is GSI-influenced"]
+].map(t=>`<div class="tile exm"><span class="v">${t[0]}</span><span class="l">${t[1]}</span><span class="s">${t[2]}</span></div>`).join("");
+
+// Leading indicators
+$("leadMeter").innerHTML=`<h3>Channel build scorecard</h3>`+LEAD.map(([l,a,t])=>`<div class="mrow"><span>${l}</span><div class="mtrack" role="img" aria-label="${l}: ${a} of ${t}"><div class="mfill" style="width:${Math.min(100,a/t*100)}%"></div></div><span class="mval">${a} / ${t}</span></div>`).join("")+`<p class="note">Bars show the month 9 position against the month 12 goal.</p>`;
+
+// Quarter chart
+function drawQ(){
+ const W=Math.max(280,$("qChart").clientWidth||520),H=260,pl=48,pr=12,pt=14,pb=34,iw=W-pl-pr,ih=H-pt-pb;
+ const max=600,y=v=>pt+ih-(v/max)*ih,bw=iw/Q.length*0.46;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Quarterly closed revenue and commit forecast against target">`;
+ for(let v=0;v<=max;v+=150){s+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)" stroke-width="1"/><text x="${pl-8}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${(v/1000).toFixed(2)}</text>`;}
+ Q.forEach((d,i)=>{
+  const cx=pl+iw/Q.length*(i+.5),x=cx-bw/2;
+  const val=d.closed||d.commit, isC=d.closed>0;
+  if(val>0){const h=ih-(y(val)-pt);s+=`<path d="M${x},${y(0)} V${y(val)+4} q0,-4 4,-4 h${bw-8} q4,0 4,4 V${y(0)} Z" fill="${isC?"var(--accent)":"var(--teal-soft)"}" stroke="${isC?"none":"var(--bd-teal)"}" stroke-width="1.5" data-tip="${d.q}: ${isC?"closed":"commit"} USD ${val}k against target USD ${d.t}k"/>`;}
+  s+=`<rect x="${x-6}" y="${pt}" width="${bw+12}" height="${ih}" fill="transparent" data-tip="${d.q}: ${val?((isC?"closed":"commit")+" USD "+val+"k, "):"no commit yet, "}target USD ${d.t}k"/>`;
+  if(d.t>0)s+=`<line x1="${x-6}" x2="${x+bw+6}" y1="${y(d.t)}" y2="${y(d.t)}" stroke="var(--fg)" stroke-width="2.5" pointer-events="none"/>`;
+  s+=`<text x="${cx}" y="${H-12}" text-anchor="middle" font-size="12" fill="var(--fg2)" font-family="IBM Plex Mono,monospace">${d.q}</text>`;
+  if(val>0)s+=`<text x="${cx}" y="${Math.min(y(val),y(d.t))-8}" text-anchor="middle" font-size="11" fill="var(--fg)" font-family="IBM Plex Mono,monospace">${(val/1000).toFixed(2)}</text>`;
+ });
+ s+=`<text x="${pl}" y="${pt-2}" font-size="10" fill="var(--muted)" font-family="IBM Plex Mono,monospace">USD m</text></svg><div class="tip"></div>`;
+ $("qChart").innerHTML=s; tips($("qChart"));
+}
+
+// Stage chart
+function drawS(){
+ const rows=STAGES.map(st=>({st,v:open.filter(x=>x.st===st).reduce((a,x)=>a+x.v,0),n:open.filter(x=>x.st===st).length}));
+ const W=Math.max(280,$("stageChart").clientWidth||520),rh=38,pl=128,pr=70,H=rows.length*rh+10,iw=W-pl-pr,max=Math.max(...rows.map(r=>r.v))||1;
+ let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Open pipeline value by stage">`;
+ rows.forEach((r,i)=>{const yy=6+i*rh,w=Math.max(r.v/max*iw,r.v?6:0);
+  s+=`<text x="${pl-10}" y="${yy+rh/2+1}" text-anchor="end" font-size="12" fill="var(--fg2)" dominant-baseline="middle">${r.st}</text>`;
+  if(w)s+=`<path d="M${pl},${yy+7} H${pl+w-4} q4,0 4,4 V${yy+rh-11} q0,4 -4,4 H${pl} Z" fill="var(--accent2)" data-tip="${r.st}: ${r.n} deals, USD ${r.v}k"/>`;
+  s+=`<rect x="${pl}" y="${yy}" width="${iw}" height="${rh}" fill="transparent" data-tip="${r.st}: ${r.n} deals, USD ${r.v}k"/>`;
+  s+=`<text x="${pl+w+8}" y="${yy+rh/2+1}" font-size="12" fill="var(--fg)" dominant-baseline="middle" font-family="IBM Plex Mono,monospace">${r.v}k · ${r.n}</text>`;});
+ s+=`</svg><div class="tip"></div>`;
+ $("stageChart").innerHTML=s; tips($("stageChart"));
+}
+drawQ();drawS();
+let rz;window.addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{drawQ();drawS();},150);});
+
+function tips(box){const tip=box.querySelector(".tip");
+ box.querySelectorAll("[data-tip]").forEach(el=>{
+  el.addEventListener("pointerenter",()=>{tip.textContent=el.dataset.tip;tip.style.opacity=1;});
+  el.addEventListener("pointermove",e=>{const r=box.getBoundingClientRect();tip.style.left=Math.min(Math.max(e.clientX-r.left,70),r.width-70)+"px";tip.style.top=(e.clientY-r.top)+"px";});
+  el.addEventListener("pointerleave",()=>{tip.style.opacity=0;});
+ });}
+
+// Priority table
+const src=g=>FIND.filter(x=>x.o===g).map(x=>`<a href="${x.u}" target="_blank" rel="noopener">${esc(x.s)}</a>`).join(", ");
+$("prioBody").innerHTML=PRIO.map(p=>`<tr><td class="lead" data-l="GSI"><strong>${p.g}</strong></td><td data-l="Wave"><span class="wave ${p.w===1?"w1":p.w===2?"w2":"w3"}">Wave ${p.w}</span></td><td class="wide" data-l="Singapore and SEA AI footprint">${esc(p.fp)}</td><td class="wide" data-l="Current model alliances">${esc(p.ma)}</td><td class="wide" data-l="Why BytePlus fits" style="min-width:240px">${esc(p.why)}<div class="note" style="margin-top:4px">Sources: ${src(p.g)}</div></td></tr>`).join("");
+
+// Pipeline
+$("fGsi").innerHTML=`<option value="">All</option>`+[...new Set(PIPE.map(x=>x.g))].sort().map(g=>`<option>${g}</option>`).join("");
+const fcCls={Commit:"p-good","Best case":"p-acc",Pipeline:"p-idle",Won:"p-good"};
+function drawPipe(){
+ const g=$("fGsi").value,c=$("fCat").value,m=$("fSrc").value;
+ const rows=PIPE.filter(x=>(!g||x.g===g)&&(!c||x.fc===c)&&(!m||x.m===m));
+ $("pipeBody").innerHTML=rows.length?rows.map(x=>`<tr><td class="lead" data-l="Partner">${x.g} · ${esc(x.c)}</td><td class="wide" data-l="Use case">${esc(x.uc)}</td><td data-l="BytePlus product">${esc(x.p)}</td><td data-l="Stage">${x.st}</td><td data-l="MEDDPICC"><span class="mp">${x.mp} / 8</span></td><td data-l="Motion">${x.m}</td><td data-l="Forecast"><span class="pill ${fcCls[x.fc]}">${x.fc}</span></td><td class="num" data-l="USD k">${x.v}</td><td data-l="Close">${x.q}</td><td class="wide" data-l="Next step">${esc(x.n)}</td></tr>`).join(""):`<tr><td colspan="10" class="note">No opportunities match these filters.</td></tr>`;
+ $("pipeSum").textContent=rows.length+" opportunities, USD "+rows.reduce((a,x)=>a+x.v,0)+"k";
+}
+["fGsi","fCat","fSrc"].forEach(id=>$(id).addEventListener("change",drawPipe));drawPipe();
+
+// Relationships
+$("relGrid").innerHTML=Object.entries(REL).map(([g,seats])=>{
+ const score=seats.filter(s=>s[1]==="Engaged"||s[1]==="Sponsor").length;
+ return `<div class="panel"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><h3>${g}</h3><span class="note">${score} of ${seats.length} seats engaged</span></div><ul>${seats.map(s=>`<li><span>${s[0]}</span><span class="pill ${STCLS[s[1]]}">${s[1]}</span><span class="pair">Paired with <b>${s[2]}</b></span></li>`).join("")}</ul></div>`;}).join("");
+
+// Plays
+$("plays").innerHTML=PLAYS.map(p=>`<div class="panel play"><span class="eyebrow">${esc(p.fit)}</span><h3>${esc(p.t)}</h3><p><strong>${esc(p.p)}.</strong> ${esc(p.proof)} <a href="${p.u}" target="_blank" rel="noopener">Source</a></p></div>`).join("");
+
+// Findings
+const orgs=["BytePlus",...GSIS,"Other"];
+$("ffOrg").innerHTML=`<option value="">All</option>`+orgs.map(o=>`<option>${o}</option>`).join("");
+function drawFind(){
+ const o=$("ffOrg").value,c=$("ffConf").value;
+ const rows=FIND.filter(x=>(!o||x.o===o)&&(!c||x.c===c)).sort((a,b)=>(b.d||"0").localeCompare(a.d||"0"));
+ $("findBody").innerHTML=rows.length?rows.map(x=>`<tr><td class="lead" data-l="Date" style="white-space:nowrap">${x.o} <span class="note" style="font-family:var(--mono)">${x.d||"Undated"}</span></td><td class="wide" data-l="Finding" style="min-width:260px">${esc(x.f)}</td><td data-l="Confidence"><span class="pill conf-${x.c}">${x.c}</span></td><td data-l="Source"><a href="${x.u}" target="_blank" rel="noopener">${esc(x.s)}</a></td></tr>`).join(""):`<tr><td colspan="5" class="note">No findings match these filters.</td></tr>`;
+ $("findCount").textContent=rows.length+" of "+FIND.length+" findings shown";
+}
+["ffOrg","ffConf"].forEach(id=>$(id).addEventListener("change",drawFind));drawFind();
+})();
+</script>
+</body></html>
